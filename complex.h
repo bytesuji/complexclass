@@ -5,8 +5,6 @@
 #include <cmath>
 #include <cassert>
 
-using namespace std;
-
 class Complex
 {
 private:
