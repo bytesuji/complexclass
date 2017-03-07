@@ -162,6 +162,7 @@ Complex cPow(const Complex &c, int k)
 long factorial(int x)
 {
 	x = round(x); // so we don't ruin things with fractional factorials, which need to be defined in terms of an integral
+	//TODO add an exception catcher here
 	if(x == 0)
 		return 1;
 	else
@@ -233,8 +234,8 @@ Complex ccot(const Complex &c)
 
 /*
  	Hyperbolic Functions
-	These can be defined in terms of csin and ccos too, or we can use the exponential definitions.
- 	I'll stick with using csin and ccos here; otherwise I'd have to make cPow handle
+	These can be defined in terms of csin and ccos too, or we can use the exponential
+	definitions. I'll stick with using csin and ccos here; otherwise I'd have to make cPow handle
  	double exponents, which I'm not ready to do yet.
 */
 
