@@ -14,20 +14,27 @@ private:
 	double mImag;
 
 public:
-	explicit Complex(double reVal = 0, double imVal = 0):
+	explicit Complex(double reVal, double imVal):
 		mReal(reVal), mImag(imVal) { }
 	Complex(double reVal): mReal(reVal), mImag(0) { }
 
 	//this function is only for easy testing in the cling interpreter
 	void print() { std::cout << *this << std::endl; }
 
-	inline double arg()
+	inline double arg() const
 	{
 		return atan2(mImag, mReal);
 	}
 
-	inline double mod() { return sqrt(pow(mReal, 2) + pow(mImag, 2)); }
+	inline double mod() const { return sqrt(pow(mReal, 2) + pow(mImag, 2)); }
 	Complex conj() { return Complex(mReal, -mImag); }
+
+	void polar() { std::cout << "(" << this->mod() << ", " << this->arg() << ")"<< '\n'; }
+	double* rpolar()
+	{
+		double n[2] = {this->mod(), this->arg()};
+		return n;
+	}
 
 	friend std::ostream& operator<<(std::ostream& out, const Complex &c)
 	{
@@ -99,7 +106,7 @@ void operator*=(Complex &a, Complex &b)
 }
 
 Complex operator-(const Complex &a, const Complex &b)
-{
+ {
 	return Complex(Re(a) - Re(b), Im(a) - Im(b));
 }
 
