@@ -18,7 +18,7 @@ public:
 		mReal(reVal), mImag(imVal) { }
 	Complex(double reVal): mReal(reVal), mImag(0) { }
 
-	//this function is only for easy testing in the cling interpreter
+	//this function is only for easier testing in the cling interpreter
 	void print() { std::cout << *this << std::endl; }
 
 	inline double arg() const
@@ -30,7 +30,8 @@ public:
 	Complex conj() { return Complex(mReal, -mImag); }
 
 	void polar() { std::cout << "(" << this->mod() << ", " << this->arg() << ")"<< '\n'; }
-	double* rpolar()
+
+	double* rpolar() // function is pure trash
 	{
 		double n[2] = {this->mod(), this->arg()};
 		return n;
@@ -42,15 +43,19 @@ public:
 		if(c.mImag == 0)
 			out << c.mReal;
 		else if(c.mReal == 0 && c.mImag > 1)
-			out << c.mImag;
+			out << c.mImag << "i";
 		else if(c.mReal == 0 && c.mImag == 1)
 			out << "i";
 		else if(c.mImag == 1)
 			out << c.mReal << " + i";
 		else if(c.mImag > 0)
 			out << c.mReal << " + " << c.mImag << "i";
+		else if(c.mReal == 0 && c.mImag == -1)
+			out << "-i";
+		else if(c.mReal == 0 && c.mImag < 0)
+			out << c.mImag << "i";
 		else
-			out << c.mReal << " " << c.mImag << "i";
+			out << c.mReal << " - " << std::abs(c.mImag) << "i";
 
 		return out;
 	}
@@ -237,7 +242,6 @@ Complex ccot(const Complex &c)
 {
 	return ccos(c) / csin(c);
 }
-
 
 /*
  	Hyperbolic Functions
