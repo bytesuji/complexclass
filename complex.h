@@ -3,9 +3,37 @@
 
 #include <iostream>
 #include <cmath>
+#include <mpreal.h>
+#include <vector>
 
 const double PI = 3.141592653589793238462;
 const double E = 2.7182818284590452353602;
+const std::vector<mpfr::mpreal> inverseFactorials = {"1.00000000000000",
+                                                 "1.00000000000000",
+                                                 "0.500000000000000",
+                                                 "0.166666666666667",
+                                                 "0.0416666666666667",
+                                                 "0.00833333333333333",
+                                                 "0.00138888888888889",
+                                                 "0.000198412698412698",
+                                                 "0.0000248015873015873",
+                                                 "0.00000275573192239859",
+                                                 "0.000000275573192239859",
+                                                 "0.0000000250521083854417",
+                                                 "0.00000000208767569878681",
+                                                 "0.000000000160590438368216",
+                                                 "0.0000000000114707455977297",
+                                                 "0.000000000000764716373181982",
+                                                 "0.0000000000000477947733238739",
+                                                 "0.00000000000000281145725434552",
+                                                 "0.000000000000000156192069685862",
+                                                 "0.00000000000000000822063524662433"};
+
+template <typename T>
+T max(T a, T b)
+{
+   return a > b ? a : b;
+}
 
 class Complex
 {
@@ -31,7 +59,7 @@ public:
 
 	void polar() { std::cout << "(" << this->mod() << ", " << this->arg() << ")"<< '\n'; }
 
-	double* rpolar() // function is pure trash
+	double* rpolar()
 	{
 		double n[2] = {this->mod(), this->arg()};
 		return n;
@@ -186,18 +214,18 @@ Complex csin(const Complex &c)
 	try
 	{
 		if(Re(c) > 3 || Im(c) > 3)
-			throw "value outside of reasonable accuracy range.";
+			throw "value outside of reasonable accuracy range.\n";
 		/* This part of the function is included because we're using a 15th-degree Taylor polynomial[0]
 	 	to approximate sin(x); this is only accurate within the rough range of (-3, 3), hence the exception. */
 
 	}
 	catch(const char* exception)
 	{
-	 	std::cerr << "Error: " << exception;
+	 	std::cerr << "Warning: " << exception;
 	}
 
 	Complex res(0, 0);
-	for(int i = 0; i <= 15; ++i)
+	for(int i = 0; i <= 19; ++i)
 		res += (pow(-1,i) / factorial(2*i + 1)) * cPow(c, 2*i + 1);
 
 	return res;
@@ -208,11 +236,11 @@ Complex ccos(const Complex &c)
 	try
 	{
 		if(Re(c) > 3 || Im(c) > 3)
-			throw "value outside of reasonable accuracy range.";
+			throw "value outside of reasonable accuracy range.\n";
 	}
 	catch(const char* exception)
 	{
-	 	std::cerr << "Error: " << exception;
+	 	std::cerr << "Warning: " << exception;
 	}
 
 	Complex res(0, 0);
@@ -285,7 +313,7 @@ Complex ccoth(const Complex &c)
 #endif
 
 /* TODO:
-	nothing right now
+   write better taylor polynomial for trig memes
 */
 
 // [0] https://en.wikipedia.org/wiki/Taylor_series
