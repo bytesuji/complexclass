@@ -1,33 +1,34 @@
-#ifndef COMPLEX_H
+ifndef COMPLEX_H
 #define COMPLEX_H
 
 #include <iostream>
 #include <cmath>
 #include <mpreal.h>
 #include <vector>
+#include <cmath>
 
 const double PI = 3.141592653589793238462;
 const double E = 2.7182818284590452353602;
 const std::vector<mpfr::mpreal> inverseFactorials = {"1.00000000000000",
-                                                 "1.00000000000000",
-                                                 "0.500000000000000",
-                                                 "0.166666666666667",
-                                                 "0.0416666666666667",
-                                                 "0.00833333333333333",
-                                                 "0.00138888888888889",
-                                                 "0.000198412698412698",
-                                                 "0.0000248015873015873",
-                                                 "0.00000275573192239859",
-                                                 "0.000000275573192239859",
-                                                 "0.0000000250521083854417",
-                                                 "0.00000000208767569878681",
-                                                 "0.000000000160590438368216",
-                                                 "0.0000000000114707455977297",
-                                                 "0.000000000000764716373181982",
-                                                 "0.0000000000000477947733238739",
-                                                 "0.00000000000000281145725434552",
-                                                 "0.000000000000000156192069685862",
-                                                 "0.00000000000000000822063524662433"};
+                                                     "1.00000000000000",
+                                                     "0.500000000000000",
+                                                     "0.166666666666667",
+                                                     "0.0416666666666667",
+                                                     "0.00833333333333333",
+                                                     "0.00138888888888889",
+                                                     "0.000198412698412698",
+                                                     "0.0000248015873015873",
+                                                     "0.00000275573192239859",
+                                                     "0.000000275573192239859",
+                                                     "0.0000000250521083854417",
+                                                     "0.00000000208767569878681",
+                                                     "0.000000000160590438368216",
+                                                     "0.0000000000114707455977297",
+                                                     "0.000000000000764716373181982",
+                                                     "0.0000000000000477947733238739",
+                                                     "0.00000000000000281145725434552",
+                                                     "0.000000000000000156192069685862",
+                                                     "0.00000000000000000822063524662433"};
 
 template <typename T>
 T max(T a, T b)
@@ -133,6 +134,20 @@ Complex operator*(const Complex &a, const Complex &b)
 	return Complex(newRe, newIm);
 }
 
+Complex operator*(const mpfr::mpreal &a, const Complex &b)
+{
+   double newRe = a.toDouble() * Re(b);
+   return Complex(newRe, Im(b));
+}
+
+/*
+Complex operator*(const Complex &a, const mpfr::mpreal &b)
+{
+   double newRe = b.toDouble() * Re(a);
+   return Complex(newRe, Im(a));
+}
+*/
+
 void operator*=(Complex &a, Complex &b)
 {
 	a = a * b;
@@ -205,8 +220,7 @@ long factorial(int x)
 	//TODO add an exception catcher here
 	if(x == 0)
 		return 1;
-	else
-		return x * factorial(x-1);
+	return x * factorial(x-1);
 }
 
 Complex csin(const Complex &c)
@@ -225,10 +239,16 @@ Complex csin(const Complex &c)
 	}
 
 	Complex res(0, 0);
+   //long range_scale = round(max(Re(c), Im(c))) / 6;
 	for(int i = 0; i <= 19; ++i)
 		res += (pow(-1,i) / factorial(2*i + 1)) * cPow(c, 2*i + 1);
 
-	return res;
+   /*
+   for(int i = 0; i <= 9; ++i)
+      res += (pow(-1,i) * inverseFactorials.at(2*i + 1) * cPow((2*PI*range_scale) - c, 2*i + 1));
+   */
+
+	return res /** -1*/;
 }
 
 Complex ccos(const Complex &c)
@@ -246,6 +266,27 @@ Complex ccos(const Complex &c)
 	Complex res(0, 0);
 	for(int n = 0; n <= 15; ++n)
 		res += (pow(-1,n) / factorial(2*n) * cPow(c, 2*n));
+
+	return res;
+   /*
+	try
+	{
+		if(Re(c) > 3 || Im(c) > 3)
+			throw "value outside of reasonable accuracy range.\n";
+	}
+	catch(const char* exception)
+	{
+	 	std::cerr << "Warning: " << exception;
+	}
+
+	Complex res(0, 0);
+   long range_scale = round(max(Re(c), Im(c))) / 6;
+	for(int i = 0; i <= 19; ++i)
+		res += (pow(-1,i) / factorial(2*i + 1)) * cPow(c, 2*i + 1);
+
+   for(int i = 0; i <= 19; ++i)
+      res += (pow(-1,i) * inverseFactorials.at(2*i) * cPow((2*PI*range_scale) - c, 2*i));
+   */
 
 	return res;
 }
