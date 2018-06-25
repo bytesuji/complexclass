@@ -352,9 +352,3 @@ Complex ccoth(const Complex &c)
 }
 
 #endif
-
-/* TODO:
-   write better taylor polynomial for trig memes
-*/
-
-// [0] https://en.wikipedia.org/wiki/Taylor_series
